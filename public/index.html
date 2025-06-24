@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- Metas -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="RUSH News">
+    <meta name="keywords" content="jogos, games, esports, cs, csgo, lol, dota, rainbow six, notícias">
+    <meta name="description" content="O melhor site para você se manter informado sobre o mundo dos games!">
+    
+    <title>RUSH - Início</title>
+    
+    <!-- Links -->
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Bangers|Open+Sans:300,400,500,600,700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <div class="logo">
+                    <a href="/" id="titulo">RUSH</a>
+                </div>
+                
+                <!-- Menu Desktop -->
+                <nav class="menu-desktop">
+                    <ul>
+                        <li class="selected">
+                            <a href="/">Início</a>
+                        </li>
+                        <li>
+                            <a href="/news">Notícias</a>
+                        </li>
+                        <li>
+                            <a href="/forum">Fórum</a>
+                        </li>
+                        <li>
+                            <a href="/sobre">Sobre</a>
+                        </li>
+                        <li>
+                            <a href="/contato">Contato</a>
+                        </li>
+                    </ul>
+                </nav>
+                
+                <!-- Botões de Ação -->
+                <div class="header-actions">
+                    <button class="btn btn-primary" id="post-news-btn">
+                        <span class="material-icons">add</span>
+                        Postar Notícia
+                    </button>
+                    <button class="btn btn-secondary" id="manage-carousel-btn">
+                        <span class="material-icons">settings</span>
+                        Gerenciar Carrossel
+                    </button>
+                </div>
+                
+                <div class="clear"></div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Carrossel de Notícias Principais -->
+        <section class="hero-carousel">
+            <div class="carousel-container">
+                <div class="carousel-wrapper">
+                    <div class="carousel-slides" id="carousel-slides">
+                        <!-- Slides serão carregados dinamicamente -->
+                        <div class="carousel-slide loading-slide">
+                            <div class="slide-content">
+                                <div class="slide-loading">
+                                    <div class="loading-spinner"></div>
+                                    <p>Carregando notícias principais...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Controles de Navegação -->
+                    <button class="carousel-btn carousel-btn-prev" id="carousel-prev" aria-label="Notícia anterior">
+                        <span class="material-icons">chevron_left</span>
+                    </button>
+                    <button class="carousel-btn carousel-btn-next" id="carousel-next" aria-label="Próxima notícia">
+                        <span class="material-icons">chevron_right</span>
+                    </button>
+                </div>
+                
+                <!-- Indicadores -->
+                <div class="carousel-indicators" id="carousel-indicators">
+                    <!-- Indicadores serão criados dinamicamente -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Notícias em Destaque -->
+        <section class="featured-section">
+            <div class="container">
+                <h2>🔥 Notícias em Destaque</h2>
+                <div class="featured-grid" id="featured-news">
+                    <!-- Notícias em destaque serão carregadas dinamicamente -->
+                    <div class="loading">Carregando notícias em destaque...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Últimas Notícias -->
+        <section class="news-section">
+            <div class="container">
+                <h2>📰 Últimas Notícias</h2>
+                
+                <!-- Filtros -->
+                <div class="news-filters">
+                    <button class="filter-btn active" data-category="">Todas</button>
+                    <button class="filter-btn" data-category="CS:GO">CS:GO</button>
+                    <button class="filter-btn" data-category="League of Legends">LoL</button>
+                    <button class="filter-btn" data-category="Dota 2">Dota 2</button>
+                    <button class="filter-btn" data-category="Valorant">Valorant</button>
+                </div>
+                
+                <!-- Lista de Notícias -->
+                <div class="news-grid" id="latest-news">
+                    <!-- Notícias serão carregadas dinamicamente -->
+                    <div class="loading">Carregando últimas notícias...</div>
+                </div>
+                
+                <!-- Botão Carregar Mais -->
+                <div class="load-more-container">
+                    <button class="load-more-btn" id="load-more-btn">
+                        <span class="material-icons">expand_more</span>
+                        Carregar Mais Notícias
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção do Fórum -->
+        <section class="forum-section">
+            <div class="container">
+                <h2>💬 Discussões do Fórum</h2>
+                <div class="forum-topics" id="forum-topics">
+                    <!-- Tópicos do fórum serão carregados dinamicamente -->
+                    <div class="loading">Carregando discussões do fórum...</div>
+                </div>
+                <div class="forum-cta">
+                    <a href="/forum" class="btn btn-primary">
+                        <span class="material-icons">forum</span>
+                        Ver Todas as Discussões
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção de Busca -->
+        <section class="search-section">
+            <div class="container">
+                <h2>🔍 Buscar Notícias</h2>
+                <div class="search-form">
+                    <input type="text" id="search-input" placeholder="Digite sua busca..." class="search-input">
+                    <button id="search-btn" class="search-btn">
+                        <span class="material-icons">search</span>
+                        Buscar
+                    </button>
+                </div>
+                <div class="search-results" id="search-results">
+                    <!-- Resultados da busca aparecerão aqui -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal para Postar Notícia -->
+    <div class="modal" id="post-news-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📝 Postar Nova Notícia</h2>
+                <button class="modal-close" id="close-news-modal">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <form id="post-news-form">
+                <div class="form-group">
+                    <label for="news-title">Título da Notícia:</label>
+                    <input type="text" id="news-title" name="title" required placeholder="Digite o título da notícia">
+                </div>
+                <div class="form-group">
+                    <label for="news-category">Categoria:</label>
+                    <select id="news-category" name="category" required>
+                        <option value="">Selecione uma categoria</option>
+                        <option value="CS:GO">CS:GO</option>
+                        <option value="League of Legends">League of Legends</option>
+                        <option value="Dota 2">Dota 2</option>
+                        <option value="Valorant">Valorant</option>
+                        <option value="Geral">Geral</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="news-summary">Resumo:</label>
+                    <textarea id="news-summary" name="summary" required placeholder="Escreva um resumo da notícia..." rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="news-content">Conteúdo:</label>
+                    <textarea id="news-content" name="content" required placeholder="Escreva o conteúdo completo da notícia..." rows="8"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="news-author">Autor:</label>
+                    <input type="text" id="news-author" name="author" required placeholder="Digite o nome do autor">
+                </div>
+                <div class="form-group">
+                    <label for="news-image">URL da Imagem (opcional):</label>
+                    <input type="url" id="news-image" name="imageUrl" placeholder="https://exemplo.com/imagem.jpg">
+                </div>
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="news-featured" name="featured">
+                        <span class="checkmark"></span>
+                        Adicionar ao carrossel (destaque)
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancel-news">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="material-icons">send</span>
+                        Publicar Notícia
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div style="text-align: center; padding: 30px 0; color: #cccccc; border-top: 1px solid #555;">
+                <p>&copy; 2024 RUSH News. Todos os direitos reservados.</p>
+                <p>O melhor site para você se manter informado sobre o mundo dos games!</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/js/app.js"></script>
+</body>
+</html>
+

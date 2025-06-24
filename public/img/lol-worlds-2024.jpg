@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="250" viewBox="0 0 400 250">
+  <rect width="400" height="250" fill="#2c2c2c"/>
+  <rect x="50" y="50" width="300" height="150" fill="#c89b3c" rx="10"/>
+  <text x="200" y="110" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="white">LEAGUE OF</text>
+  <text x="200" y="130" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="white">LEGENDS</text>
+  <text x="200" y="160" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="white">Worlds 2024</text>
+</svg>
+

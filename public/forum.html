@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- Metas -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="RUSH News">
+    <meta name="description" content="Fórum de discussões sobre games - RUSH">
+
+    
+    <title>RUSH - Fórum</title>
+    
+    <!-- Links -->
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Bangers|Open+Sans:300,400,500,600,700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <div class="logo">
+                    <a href="/" id="titulo">RUSH</a>
+                </div>
+                
+                <!-- Menu Desktop -->
+                <nav class="menu-desktop">
+                    <ul>
+                        <li>
+                            <a href="/">Início</a>
+                        </li>
+                        <li>
+                            <a href="/news">Notícias</a>
+                        </li>
+                        <li class="selected">
+                            <a href="/forum">Fórum</a>
+                        </li>
+                        <li>
+                            <a href="/sobre">Sobre</a>
+                        </li>
+                        <li>
+                            <a href="/contato">Contato</a>
+                        </li>
+                    </ul>
+                </nav>
+                
+                <div class="clear"></div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="forum-header">
+                <h1>💬 Fórum de Discussões</h1>
+                <p>Participe das discussões sobre seus games favoritos!</p>
+            </div>
+
+            <!-- Criar Novo Tópico -->
+            <section class="create-topic">
+                <button class="btn btn-primary" id="create-topic-btn">
+                    <span class="material-icons">add</span>
+                    Criar Novo Tópico
+                </button>
+            </section>
+
+            <!-- Filtros e Busca -->
+            <section class="forum-filters">
+                <div class="filter-row">
+                    <input type="text" id="search-topics" placeholder="Buscar tópicos..." class="search-input">
+                    <select id="category-filter" class="filter-select">
+                        <option value="">Todas as categorias</option>
+                        <option value="CS:GO">CS:GO</option>
+                        <option value="League of Legends">League of Legends</option>
+                        <option value="Dota 2">Dota 2</option>
+                        <option value="Valorant">Valorant</option>
+                        <option value="Geral">Geral</option>
+                    </select>
+                    <select id="sort-filter" class="filter-select">
+                        <option value="recent">Mais Recentes</option>
+                        <option value="popular">Mais Populares</option>
+                        <option value="oldest">Mais Antigos</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- Lista de Tópicos -->
+            <section class="forum-topics">
+                <div class="topics-list" id="topics-list">
+                    <!-- Tópicos serão carregados dinamicamente -->
+                    <div class="loading">Carregando tópicos do fórum...</div>
+                </div>
+            </section>
+
+            <!-- Paginação -->
+            <section class="forum-pagination">
+                <div class="pagination" id="pagination">
+                    <!-- Paginação será criada dinamicamente -->
+                </div>
+            </section>
+        </div>
+
+        <!-- Modal para Criar Tópico -->
+        <div class="modal" id="create-topic-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Criar Novo Tópico</h2>
+                    <button class="modal-close" id="close-modal">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+                <form id="create-topic-form">
+                    <div class="form-group">
+                        <label for="topic-title">Título do Tópico:</label>
+                        <input type="text" id="topic-title" name="title" required placeholder="Digite o título do tópico">
+                    </div>
+                    <div class="form-group">
+                        <label for="topic-category">Categoria:</label>
+                        <select id="topic-category" name="category" required>
+                            <option value="">Selecione uma categoria</option>
+                            <option value="CS:GO">CS:GO</option>
+                            <option value="League of Legends">League of Legends</option>
+                            <option value="Dota 2">Dota 2</option>
+                            <option value="Valorant">Valorant</option>
+                            <option value="Geral">Geral</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="topic-description">Descrição:</label>
+                        <textarea id="topic-description" name="description" required placeholder="Descreva o tópico..." rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="topic-content">Conteúdo:</label>
+                        <textarea id="topic-content" name="content" required placeholder="Escreva o conteúdo do tópico..." rows="6"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="topic-author">Seu Nome:</label>
+                        <input type="text" id="topic-author" name="author" required placeholder="Digite seu nome">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancel-topic">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="material-icons">send</span>
+                            Criar Tópico
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div style="text-align: center; padding: 30px 0; color: #cccccc; border-top: 1px solid #555;">
+                <p>&copy; 2024 RUSH News. Todos os direitos reservados.</p>
+                <p>Fórum de discussões sobre games</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/js/main.js"></script>
+    <script src="/js/forum.js"></script>
+</body>
+</html>
+

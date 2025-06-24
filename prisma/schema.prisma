@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model News {
+  id          Int      @id @default(autoincrement())
+  title       String
+  content     String
+  summary     String?
+  imageUrl    String?
+  author      String   @default("Admin")
+  category    String   @default("Geral")
+  published   Boolean  @default(false)
+  featured    Boolean  @default(false)
+  views       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relacionamento com comentários
+  comments    Comment[]
+  
+  @@map("news")
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  author    String
+  email     String?
+  newsId    Int
+  parentId  Int?     // Para respostas a comentários
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relacionamentos
+  news      News     @relation(fields: [newsId], references: [id], onDelete: Cascade)
+  parent    Comment? @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[] @relation("CommentReplies")
+  
+  @@map("comments")
+}
+
+model ForumTopic {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  author      String
+  category    String   @default("Geral")
+  pinned      Boolean  @default(false)
+  locked      Boolean  @default(false)
+  views       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relacionamento com posts
+  posts       ForumPost[]
+  
+  @@map("forum_topics")
+}
+
+model ForumPost {
+  id        Int      @id @default(autoincrement())
+  content   String
+  author    String
+  topicId   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relacionamento
+  topic     ForumTopic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  
+  @@map("forum_posts")
+}
+

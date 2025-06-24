@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- Metas -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="RUSH News">
+    <meta name="description" content="Administração do carrossel de notícias - RUSH">
+
+    
+    <title>RUSH - Admin Carrossel</title>
+    
+    <!-- Links -->
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Bangers|Open+Sans:300,400,500,600,700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <div class="logo">
+                    <a href="/" id="titulo">RUSH</a>
+                </div>
+                
+                <!-- Menu Desktop -->
+                <nav class="menu-desktop">
+                    <ul>
+                        <li>
+                            <a href="/">Início</a>
+                        </li>
+                        <li>
+                            <a href="/news">Notícias</a>
+                        </li>
+                        <li>
+                            <a href="/forum">Fórum</a>
+                        </li>
+                        <li class="selected">
+                            <a href="/admin/carousel">Admin</a>
+                        </li>
+                    </ul>
+                </nav>
+                
+                <div class="clear"></div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="admin-header">
+                <h1>Administração do Carrossel</h1>
+                <p>Gerencie as notícias que aparecem no carrossel principal do site.</p>
+            </div>
+
+            <!-- Estatísticas -->
+            <section class="admin-stats">
+                <h2>Estatísticas</h2>
+                <div class="stats-grid" id="stats-grid">
+                    <div class="loading">Carregando estatísticas...</div>
+                </div>
+            </section>
+
+            <!-- Carrossel Atual -->
+            <section class="current-carousel">
+                <h2>Notícias no Carrossel</h2>
+                <div class="carousel-actions">
+                    <button class="btn btn-danger" id="clear-carousel-btn">
+                        <span class="material-icons">clear_all</span>
+                        Limpar Carrossel
+                    </button>
+                    <button class="btn btn-secondary" id="refresh-carousel-btn">
+                        <span class="material-icons">refresh</span>
+                        Atualizar
+                    </button>
+                </div>
+                <div class="carousel-list" id="carousel-list">
+                    <div class="loading">Carregando notícias do carrossel...</div>
+                </div>
+            </section>
+
+            <!-- Todas as Notícias -->
+            <section class="all-news">
+                <h2>Todas as Notícias</h2>
+                <div class="news-filters">
+                    <input type="text" id="search-news" placeholder="Buscar notícias..." class="search-input">
+                    <select id="category-filter" class="filter-select">
+                        <option value="">Todas as categorias</option>
+                        <option value="CS:GO">CS:GO</option>
+                        <option value="League of Legends">League of Legends</option>
+                        <option value="Dota 2">Dota 2</option>
+                        <option value="Valorant">Valorant</option>
+                    </select>
+                </div>
+                <div class="news-list" id="news-list">
+                    <div class="loading">Carregando todas as notícias...</div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div style="text-align: center; padding: 30px 0; color: #cccccc; border-top: 1px solid #555;">
+                <p>&copy; 2024 RUSH News. Todos os direitos reservados.</p>
+                <p>Painel de Administração do Carrossel</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/js/main.js"></script>
+    <script src="/js/admin-carousel.js"></script>
+
+    <style>
+    .admin-header {
+        text-align: center;
+        margin: 40px 0;
+        padding: 40px;
+        background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+        border-radius: 15px;
+        color: white;
+    }
+
+    .admin-header h1 {
+        font-family: 'Bangers', cursive;
+        font-size: 48px;
+        margin-bottom: 15px;
+        color: var(--accent-color);
+    }
+
+    .admin-stats {
+        margin: 40px 0;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .stat-card {
+        background: #363636;
+        padding: 25px;
+        border-radius: 10px;
+        text-align: center;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        border-color: var(--accent-color);
+        transform: translateY(-5px);
+    }
+
+    .stat-number {
+        font-size: 36px;
+        font-weight: bold;
+        color: var(--accent-color);
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .stat-label {
+        color: #cccccc;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .carousel-actions {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 14px;
+    }
+
+    .btn-danger {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #c82333;
+        transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+    }
+
+    .btn-success {
+        background: #28a745;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: #218838;
+        transform: translateY(-2px);
+    }
+
+    .carousel-list, .news-list {
+        background: #363636;
+        border-radius: 10px;
+        padding: 20px;
+    }
+
+    .news-item {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        margin-bottom: 15px;
+        background: #2c2c2c;
+        border-radius: 8px;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .news-item:hover {
+        border-color: var(--accent-color);
+    }
+
+    .news-item.featured {
+        border-color: var(--accent-color);
+        background: rgba(255, 107, 53, 0.1);
+    }
+
+    .news-image {
+        width: 80px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin-right: 15px;
+    }
+
+    .news-content {
+        flex: 1;
+    }
+
+    .news-title {
+        font-weight: 600;
+        color: white;
+        margin-bottom: 5px;
+        font-size: 16px;
+    }
+
+    .news-meta {
+        color: #cccccc;
+        font-size: 12px;
+        display: flex;
+        gap: 15px;
+    }
+
+    .news-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-small {
+        padding: 8px 12px;
+        font-size: 12px;
+        min-width: auto;
+    }
+
+    .news-filters {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .search-input, .filter-select {
+        padding: 12px;
+        border: 1px solid #555;
+        border-radius: 5px;
+        background: #2c2c2c;
+        color: white;
+        font-size: 14px;
+    }
+
+    .search-input {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .filter-select {
+        min-width: 150px;
+    }
+
+    .search-input:focus, .filter-select:focus {
+        outline: none;
+        border-color: var(--accent-color);
+    }
+
+    .loading {
+        text-align: center;
+        color: #cccccc;
+        padding: 40px;
+        font-style: italic;
+    }
+
+    .empty-state {
+        text-align: center;
+        color: #cccccc;
+        padding: 40px;
+    }
+
+    .empty-state .material-icons {
+        font-size: 48px;
+        color: var(--accent-color);
+        margin-bottom: 15px;
+    }
+
+    @media (max-width: 768px) {
+        .admin-header h1 {
+            font-size: 36px;
+        }
+        
+        .news-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .news-image {
+            margin-bottom: 10px;
+            margin-right: 0;
+        }
+        
+        .news-actions {
+            margin-top: 10px;
+            width: 100%;
+            justify-content: flex-end;
+        }
+    }
+    </style>
+</body>
+</html>
+

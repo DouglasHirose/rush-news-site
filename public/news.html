@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <!-- Metas -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="RUSH News">
+    <meta name="keywords" content="jogos, games, esports, cs, csgo, lol, dota, rainbow six, notícias">
+    <meta name="description" content="Leia a notícia completa no RUSH News">
+
+    <title>RUSH - Notícia</title>
+    
+    <!-- Links -->
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Bangers|Open+Sans:300,400,500,600,700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <!-- Logo -->
+                <div class="logo">
+                    <a href="/" id="titulo">RUSH</a>
+                </div>
+                
+                <!-- Menu Desktop -->
+                <nav class="menu-desktop">
+                    <ul>
+                        <li>
+                            <a href="/">Início</a>
+                        </li>
+                        <li class="selected">
+                            <a href="/news">Notícias</a>
+                        </li>
+                        <li>
+                            <a href="/forum">Fórum</a>
+                        </li>
+                        <li>
+                            <a href="/sobre">Sobre</a>
+                        </li>
+                        <li>
+                            <a href="/contato">Contato</a>
+                        </li>
+                    </ul>
+                </nav>
+                
+                <div class="clear"></div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Artigo da Notícia -->
+        <article class="news-article" id="news-article">
+            <!-- Conteúdo será carregado dinamicamente -->
+            <div class="loading-container">
+                <div class="loading-spinner"></div>
+                <p>Carregando notícia...</p>
+            </div>
+        </article>
+
+        <!-- Seção de Comentários -->
+        <section class="comments-section">
+            <div class="container">
+                <h2>💬 Comentários</h2>
+                
+                <!-- Formulário de Comentário -->
+                <div class="comment-form">
+                    <h3>Deixe seu comentário</h3>
+                    <form id="comment-form">
+                        <div class="form-group">
+                            <label for="comment-author">Nome:</label>
+                            <input type="text" id="comment-author" name="author" required placeholder="Seu nome">
+                        </div>
+                        <div class="form-group">
+                            <label for="comment-content">Comentário:</label>
+                            <textarea id="comment-content" name="content" required placeholder="Escreva seu comentário..." rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="material-icons">send</span>
+                            Enviar Comentário
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Lista de Comentários -->
+                <div class="comments-list" id="comments-list">
+                    <!-- Comentários serão carregados dinamicamente -->
+                    <div class="loading">Carregando comentários...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Notícias Relacionadas -->
+        <section class="related-news">
+            <div class="container">
+                <h2>📰 Notícias Relacionadas</h2>
+                <div class="related-grid" id="related-news">
+                    <!-- Notícias relacionadas serão carregadas dinamicamente -->
+                    <div class="loading">Carregando notícias relacionadas...</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div style="text-align: center; padding: 30px 0; color: #cccccc; border-top: 1px solid #555;">
+                <p>&copy; 2024 RUSH News. Todos os direitos reservados.</p>
+                <p>O melhor site para você se manter informado sobre o mundo dos games!</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/js/main.js"></script>
+    <script src="/js/news.js"></script>
+</body>
+</html>
+
