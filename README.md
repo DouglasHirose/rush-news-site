@@ -139,6 +139,13 @@ http://localhost:3000
 - `DELETE /api/forum/:id` - Deletar tópico
 - `POST /api/forum/:id/posts` - Adicionar post
 
+#### Carrossel
+- `GET /api/news/carousel` - Obter notícias do carrossel
+- `GET /api/news/carousel/stats` - Estatísticas do carrossel
+- `PATCH /api/news/:id/featured` - Marcar/desmarcar como destaque
+- `POST /api/news/carousel/reorder` - Reordenar notícias
+- `DELETE /api/news/carousel/clear` - Limpar carrossel
+
 ## 🎮 Funcionalidades
 
 ### Para Visitantes
@@ -215,14 +222,6 @@ npm run db:studio  # Abrir Prisma Studio
 - id, content, author, topicId
 - timestamps
 
-## 🚀 Deploy
-
-O projeto está pronto para deploy em plataformas como:
-- Vercel
-- Netlify
-- Heroku
-- Railway
-- DigitalOcean
 
 ## 📄 Licença
 
