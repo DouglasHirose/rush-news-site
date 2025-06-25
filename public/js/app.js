@@ -34,6 +34,101 @@ const utils = {
     }
 };
 
+// Função para carregar notícias em destaque do backend
+async function loadFeaturedNews() {
+    try {
+        const response = await fetch('/api/news/carousel');
+        const data = await response.json();
+
+        if (data.success && data.data.length > 0) {
+            renderCarousel(data.data);
+        } else {
+            console.warn('Nenhuma notícia em destaque encontrada.');
+            document.querySelector('.carousel-slides').innerHTML = `
+                <div class="carousel-slide loading-slide">
+                    <div class="slide-loading">
+                        <p>Nenhuma notícia no carrossel</p>
+                    </div>
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('Erro ao carregar o carrossel:', error);
+    }
+}
+
+function initCarousel() {
+    const slides = document.querySelectorAll('.carousel-slide');
+    const indicators = document.querySelectorAll('.carousel-indicator');
+    let currentIndex = 0;
+    let interval;
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.toggle('active', i === index);
+            indicators[i]?.classList.toggle('active', i === index);
+        });
+        currentIndex = index;
+    }
+
+    function nextSlide() {
+        const nextIndex = (currentIndex + 1) % slides.length;
+        showSlide(nextIndex);
+    }
+
+    interval = setInterval(nextSlide, 7000);
+
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            clearInterval(interval);
+            showSlide(index);
+            interval = setInterval(nextSlide, 7000);
+        });
+    });
+
+    showSlide(currentIndex);
+}
+
+// Função para renderizar os slides do carrossel
+function renderCarousel(newsList) {
+    const slidesContainer = document.querySelector('.carousel-slides');
+    const indicatorsContainer = document.querySelector('.carousel-indicators');
+
+    if (!slidesContainer || !indicatorsContainer) return;
+
+    slidesContainer.innerHTML = '';
+    indicatorsContainer.innerHTML = '';
+
+    newsList.forEach((news, index) => {
+        slidesContainer.innerHTML += `
+            <div class="carousel-slide${index === 0 ? ' active' : ''}" 
+                 style="background-image: url('${news.imageUrl || '/img/default-news.jpg'}')">
+                <div class="slide-content">
+                    <div class="slide-category">${news.category}</div>
+                    <div class="slide-title">${news.title}</div>
+                    <div class="slide-summary">${news.summary}</div>
+                    <div class="slide-meta">
+                        <span class="slide-author">${news.author}</span>
+                        <span class="slide-date">${utils.formatDate(news.createdAt)}</span>
+                        <span class="slide-views">${news.views} visualizações</span>
+                    </div>
+                    <a href="/news/${news.id}" class="slide-cta">Leia mais</a>
+                </div>
+            </div>
+        `;
+
+        indicatorsContainer.innerHTML += `
+            <button class="carousel-indicator${index === 0 ? ' active' : ''}" data-index="${index}"></button>
+        `;
+    });
+
+    initCarousel(); // ativa transição ou navegação se necessário
+}
+// Inicializa o carregamento na página assim que o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', () => {
+    loadFeaturedNews();
+});
+
 // Classe para gerenciar a página inicial
 class HomePage {
     constructor() {
@@ -273,6 +368,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+
 // Função global para apagar notícias
 async function deleteNews(newsId) {
     if (!confirm('Tem certeza que deseja apagar esta notícia? Esta ação não pode ser desfeita.')) {
@@ -328,3 +424,68 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  const openModalBtn = document.getElementById('open-create-modal'); // seu botão principal
+  const closeModalBtn = document.getElementById('close-news-modal');
+  const cancelBtn = document.getElementById('cancel-news-btn');
+  const modal = document.getElementById('create-news-modal');
+  const form = document.getElementById('create-news-form');
+
+  // Abrir modal
+  openModalBtn?.addEventListener('click', () => {
+    modal.style.display = 'flex';
+  });
+
+  // Fechar modal
+  closeModalBtn?.addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
+
+  cancelBtn?.addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
+
+  // Enviar nova notícia
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const title = document.getElementById('title').value;
+    const summary = document.getElementById('summary').value;
+    const category = document.getElementById('category').value;
+    const imageUrl = document.getElementById('imageUrl').value;
+
+    // Validação simples
+    if (!title || !summary || !category) {
+      utils.showMessage('Por favor, preencha todos os campos obrigatórios.', 'error');
+      return;
+    }
+    
+    try {
+      const response = await fetch('/api/news', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          summary,
+          category,
+          imageUrl,
+          createdAt: new Date().toISOString()
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        utils.showMessage('Notícia criada com sucesso!', 'success');
+        modal.style.display = 'none';
+        location.reload(); // recarrega a página para atualizar as notícias
+      } else {
+        throw new Error(data.message || 'Erro ao criar notícia');
+      }
+
+    } catch (error) {
+      console.error('Erro ao criar notícia:', error);
+      utils.showMessage('Erro ao criar notícia.', 'error');
+    }
+  });
+});

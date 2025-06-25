@@ -11,7 +11,6 @@ const { connectDB } = require('./config/database');
 // Importar middlewares
 const { errorHandler } = require('./middlewares/errorHandler');
 const { logger } = require('./middlewares/logger');
-const { apiLimiter, sanitizeInput, validateContentType, securityLogger } = require('./middlewares/security');
 
 // Importar rotas da API
 const newsRoutes = require('./routes/newsRoutes');
@@ -91,7 +90,6 @@ app.get('/contato', (req, res) => {
 });
 
 // Rotas da API com rate limiting
-app.use('/api', apiLimiter);
 app.use('/api/news', newsRoutes);
 app.use('/api/forum', forumRoutes);
 
