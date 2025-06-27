@@ -1,9 +1,13 @@
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
 require('dotenv').config();
+app.use(express.json({ limit: '10mb' }));
 
 // Importar configuração do banco
 const { connectDB } = require('./config/database');
@@ -52,11 +56,6 @@ app.use(express.static(path.join(__dirname, '../public'), {
 }));
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// Middlewares personalizados
-app.use(securityLogger);
-app.use(sanitizeInput);
-app.use(validateContentType);
-
 // Middleware de log personalizado
 app.use(logger);
 
@@ -68,6 +67,36 @@ app.get('/', (req, res) => {
 app.get('/news/:id', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/news.html'));
 });
+
+app.post('/api/news', async (req, res) => {
+  const { title, summary, content, category, imageUrl, createdAt } = req.body;
+
+  if (!title || !summary || !content) {
+    return res.status(400).json({ success: false, message: 'Título, resumo e conteúdo são obrigatórios.' });
+  }
+
+  try {
+    const newNews = await prisma.news.create({
+      data: {
+        title,
+        summary,
+        content,
+        category: category || 'Geral',
+        imageUrl: imageUrl || '/img/default-news.jpg',
+        author: 'Admin',
+        createdAt: createdAt ? new Date(createdAt) : new Date()
+      }
+    });
+
+    res.status(201).json({ success: true, data: newNews });
+
+  } catch (error) {
+    console.error('Erro ao salvar no banco:', error);
+    res.status(500).json({ success: false, message: 'Erro ao salvar notícia.' });
+  }
+});
+
+
 
 app.get('/forum', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/forum.html'));
@@ -87,6 +116,10 @@ app.get('/sobre', (req, res) => {
 
 app.get('/contato', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/contato.html'));
+});
+
+app.get('/create-news', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/create-news.html'));
 });
 
 // Rotas da API com rate limiting
@@ -123,6 +156,3 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`📱 Acesse: http://localhost:${PORT}`);
     console.log(`🎮 Ambiente: ${process.env.NODE_ENV || 'development'}`);
 });
-
-module.exports = app;
-

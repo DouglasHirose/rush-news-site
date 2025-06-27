@@ -263,7 +263,6 @@ class HomePage {
             <article class="news-card">
                 <div class="news-image">
                     ${item.imageUrl ? `<img src="${item.imageUrl}" alt="${item.title}" onerror="this.style.display='none'">` : ''}
-                    <div class="news-category">${item.category}</div>
                 </div>
                 <div class="news-content">
                     <h3><a href="/news/${item.id}">${item.title}</a></h3>
@@ -368,6 +367,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('btn-create-news-page');
+  if (btn) {
+    btn.addEventListener('click', () => {
+      window.location.href = '/create-news.html';
+    });
+  }
+});
+
 
 // Função global para apagar notícias
 async function deleteNews(newsId) {
@@ -422,70 +430,4 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.log('📄 Página diferente da inicial:', window.location.pathname);
     }
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-  const openModalBtn = document.getElementById('open-create-modal'); // seu botão principal
-  const closeModalBtn = document.getElementById('close-news-modal');
-  const cancelBtn = document.getElementById('cancel-news-btn');
-  const modal = document.getElementById('create-news-modal');
-  const form = document.getElementById('create-news-form');
-
-  // Abrir modal
-  openModalBtn?.addEventListener('click', () => {
-    modal.style.display = 'flex';
-  });
-
-  // Fechar modal
-  closeModalBtn?.addEventListener('click', () => {
-    modal.style.display = 'none';
-  });
-
-  cancelBtn?.addEventListener('click', () => {
-    modal.style.display = 'none';
-  });
-
-  // Enviar nova notícia
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const title = document.getElementById('title').value;
-    const summary = document.getElementById('summary').value;
-    const category = document.getElementById('category').value;
-    const imageUrl = document.getElementById('imageUrl').value;
-
-    // Validação simples
-    if (!title || !summary || !category) {
-      utils.showMessage('Por favor, preencha todos os campos obrigatórios.', 'error');
-      return;
-    }
-    
-    try {
-      const response = await fetch('/api/news', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title,
-          summary,
-          category,
-          imageUrl,
-          createdAt: new Date().toISOString()
-        })
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        utils.showMessage('Notícia criada com sucesso!', 'success');
-        modal.style.display = 'none';
-        location.reload(); // recarrega a página para atualizar as notícias
-      } else {
-        throw new Error(data.message || 'Erro ao criar notícia');
-      }
-
-    } catch (error) {
-      console.error('Erro ao criar notícia:', error);
-      utils.showMessage('Erro ao criar notícia.', 'error');
-    }
-  });
 });

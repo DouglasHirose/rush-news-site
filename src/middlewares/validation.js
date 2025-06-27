@@ -1,29 +1,31 @@
-const { z } = require('zod');
-
 // Schema para validação de notícias
+const z = require('zod');
+
 const newsSchema = z.object({
-  title: z.string()
-    .min(5, 'Título deve ter pelo menos 5 caracteres')
-    .max(150, 'Título deve ter no máximo 150 caracteres'),
-  content: z.string()
-    .min(50, 'Conteúdo deve ter pelo menos 50 caracteres'),
-  summary: z.string()
-    .max(30, 'Resumo deve ter no máximo 30 caracteres')
-    .optional(),
-  imageUrl: z.string()
-    .url('URL da imagem inválida')
-    .optional(),
-  author: z.string()
-    .min(2, 'Nome do autor deve ter pelo menos 2 caracteres')
-    .max(100, 'Nome do autor deve ter no máximo 100 caracteres')
-    .default('Admin'),
-  category: z.string()
-    .min(2, 'Categoria deve ter pelo menos 2 caracteres')
-    .max(50, 'Categoria deve ter no máximo 50 caracteres')
-    .default('Geral'),
-  published: z.boolean().default(false),
-  featured: z.boolean().default(false)
+  title: z.string().min(1),
+  summary: z.string().min(1),
+  content: z.string().min(1),
+  category: z.string().optional(),
+  imageUrl: z.string().optional(),
+  createdAt: z.string().optional()
 });
+
+function validateNews(req, res, next) {
+  try {
+    req.body = newsSchema.parse(req.body);
+    next();
+  } catch (err) {
+    return res.status(400).json({
+      success: false,
+      message: 'Dados de entrada inválidos',
+      issues: err.errors
+    });
+  }
+}
+
+module.exports = { validateNews };
+
+
 
 // Schema para validação de comentários
 const commentSchema = z.object({

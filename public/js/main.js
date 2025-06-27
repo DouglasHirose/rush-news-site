@@ -123,7 +123,6 @@ class HomePage {
             <article class="featured-news-item">
                 <div class="news-image">
                     ${item.imageUrl ? `<img src="${item.imageUrl}" alt="${item.title}" onerror="this.style.display='none'">` : ''}
-                    <div class="news-category">${item.category}</div>
                 </div>
                 <div class="news-content">
                     <h3><a href="/news/${item.id}">${item.title}</a></h3>
@@ -149,7 +148,6 @@ class HomePage {
             <article class="news-card">
                 <div class="news-image">
                     ${item.imageUrl ? `<img src="${item.imageUrl}" alt="${item.title}" onerror="this.style.display='none'">` : ''}
-                    <div class="news-category">${item.category}</div>
                 </div>
                 <div class="news-content">
                     <h3><a href="/news/${item.id}">${item.title}</a></h3>

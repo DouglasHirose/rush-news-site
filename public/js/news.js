@@ -62,11 +62,6 @@ class NewsPage {
                         <span class="material-icons">chevron_right</span>
                         <a href="/news">Notícias</a>
                         <span class="material-icons">chevron_right</span>
-                        <span>${this.news.category}</span>
-                    </div>
-                    
-                    <div class="news-category">
-                        <span class="category-tag">${this.news.category}</span>
                     </div>
                     
                     <h1 class="news-title">${this.news.title}</h1>

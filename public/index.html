@@ -49,10 +49,11 @@
                 
                 <!-- Botões de Ação -->
                 <div class="header-actions">
-                    <button id="open-create-modal" class="btn btn-primary">
-                        <span class="material-icons">add</span>
+                    <button id="btn-create-news-page" class="btn btn-secondary">
+                        <span class="material-icons">library_add</span>
                         Criar Notícia
                     </button>
+
                     <button class="btn btn-secondary" id="manage-carousel-btn">
                         <span class="material-icons">settings</span>
                         Gerenciar Carrossel
@@ -137,41 +138,6 @@
             </div>
         </section>
     </main>
-
-    <!-- Modal para Postar Notícia -->
-    <!-- Modal de Criar Notícia -->
-<div class="modal" id="create-news-modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2>Criar Nova Notícia</h2>
-      <button class="modal-close" id="close-news-modal">
-        <span class="material-icons">close</span>
-      </button>
-    </div>
-    <form id="create-news-form">
-      <div class="form-group">
-        <label for="title">Título</label>
-        <input type="text" id="title" required />
-      </div>
-      <div class="form-group">
-        <label for="summary">Resumo</label>
-        <textarea id="summary" required></textarea>
-      </div>
-      <div class="form-group">
-        <label for="category">Categoria</label>
-        <input type="text" id="category" />
-      </div>
-      <div class="form-group">
-        <label for="imageUrl">URL da Imagem</label>
-        <input type="url" id="imageUrl" />
-      </div>
-      <div class="form-actions">
-        <button type="submit" class="btn btn-primary">Criar Notícia</button>
-        <button type="button" class="btn btn-secondary" id="cancel-news-btn">Cancelar</button>
-      </div>
-    </form>
-  </div>
-</div>
 
     <footer>
         <div class="container">

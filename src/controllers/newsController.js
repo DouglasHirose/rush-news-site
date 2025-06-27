@@ -107,10 +107,12 @@ class NewsController {
         message: 'Notícia criada com sucesso'
       });
     } catch (error) {
-      console.error('Erro ao criar notícia:', error);
-      res.status(500).json({
-        success: false,
-        message: 'Erro interno do servidor'
+      console.error('Erro ao criar notícia:', error.message);
+      console.error(error); // Isso mostra o stack trace completo
+        res.status(400).json({
+    success: false,
+    message: 'Dados de entrada inválidos',
+    error: error.message
       });
     }
   }
