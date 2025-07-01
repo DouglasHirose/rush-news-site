@@ -108,8 +108,30 @@
     }
   };
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const editingId = urlParams.get('id');
+  const form = document.getElementById('create-news-form');
+
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('create-news-form')?.addEventListener('submit', handleCreateNews);
+    if (editingId) {
+  fetch(`/api/news/${editingId}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        const noticia = data.data;
+        form.title.value = noticia.title;
+        form.summary.value = noticia.summary;
+        form.content.value = noticia.content;
+        form.category.value = noticia.category;
+        form.imageUrl.value = noticia.imageUrl || '';
+        form.querySelector('button[type=submit]').innerText = 'Salvar Alterações';
+      } else {
+        utils.showMessage('Notícia não encontrada para edição', 'error');
+      }
+    });
+}
+
     });
 async function handleCreateNews(e) {
   e.preventDefault();
@@ -131,18 +153,24 @@ async function handleCreateNews(e) {
   }
 
   try {
-    const response = await fetch('/api/news', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newsData)
-    });
+  const method = editingId ? 'PUT' : 'POST';
+  const url = editingId ? `/api/news/${editingId}` : '/api/news';
+
+  const response = await fetch(url, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(newsData)
+  });
 
     const result = await response.json();
 
     if (!result.success) throw new Error(result.message || 'Erro ao criar notícia');
 
-    utils?.showMessage?.('Notícia criada com sucesso!', 'success');
-    setTimeout(() => window.location.href = '/', 3000);
+    utils.showMessage(
+      editingId ? 'Notícia atualizada com sucesso!' : 'Notícia criada com sucesso!',
+      'success'
+    );
+    setTimeout(() => window.location.href = '/all-news', 2000);
 
   } catch (err) {
     console.error(err);

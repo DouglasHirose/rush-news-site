@@ -11,6 +11,8 @@
     
     <!-- Links -->
     <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/cards.css">
+    <link rel="stylesheet" type="text/css" href="/css/news.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Bangers|Open+Sans:300,400,500,600,700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
@@ -89,6 +91,7 @@
                   ${news.author} • ${new Date(news.createdAt).toLocaleDateString('pt-BR')}
                 </p>
                 <p class="news-summary">${news.summary}</p>
+                
               </div>
             </div>
           `).join('');

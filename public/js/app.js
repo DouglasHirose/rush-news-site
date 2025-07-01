@@ -202,9 +202,14 @@ async loadFeaturedNews() {
             <span>${item.views || 0} visualizações</span>
           </div>
         </div>
-        <button class="delete-news-btn" data-id="${item.id}" title="Apagar notícia">
-          <span class="material-icons">delete</span>
-        </button>
+        <div class="news-actions">
+          <a href="/create-news.html?id=${item.id}" class="btn btn-small btn-secondary" title="Editar">
+            <span class="material-icons">edit</span>
+          </a>
+          <button class="btn btn-small btn-danger delete-news-btn" data-id="${item.id}" title="Excluir">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
       </article>
     `).join('');
 
@@ -302,4 +307,34 @@ document.addEventListener('DOMContentLoaded', () => {
       window.homePage.loadLatestNews(window.homePage.currentPage, window.homePage.currentCategory);
     });
   }
+
+document.addEventListener('click', async (e) => {
+  const btn = e.target.closest('.delete-news-btn');
+  if (!btn) return;
+
+  const newsId = btn.getAttribute('data-id');
+  const confirmed = confirm('Tem certeza que deseja apagar esta notícia?');
+
+  if (!confirmed) return;
+
+  try {
+    const res = await fetch(`/api/news/${newsId}`, { method: 'DELETE' });
+    const data = await res.json();
+
+    if (data.success) {
+      utils.showMessage('Notícia apagada com sucesso!', 'success');
+      // Recarregue as notícias visíveis (isso depende da sua função atual)
+      if (window.homePage) {
+        await window.homePage.loadFeaturedNews();
+        await window.homePage.loadLatestNews();
+      }
+    } else {
+      throw new Error(data.message || 'Erro ao apagar notícia');
+    }
+  } catch (err) {
+    console.error('Erro ao apagar notícia:', err);
+    utils.showMessage('Erro ao apagar notícia. Tente novamente.', 'error');
+  }
+});
+
 });
