@@ -1,19 +1,19 @@
 # RUSH - Site de Notícias de Games
 
+Criado por Douglas Kaoru Hirose - CG3023486
+
 Um site completo de notícias sobre games e esports desenvolvido com Node.js, Express, Prisma e tecnologias web modernas.
 
 ## 🚀 Características
 
-- **Arquitetura MVC**: Estrutura organizada com Models, Views e Controllers
-- **API RESTful**: Endpoints completos para notícias e fórum
+- **Arquitetura MVC (Incompleta)**: Estrutura organizada com Models, Views
+- **API RESTful**: Endpoints para notícias e fórum
 - **Banco de Dados**: SQLite com Prisma ORM
-- **Validação**: Validação robusta com Zod
+- **Validação**: Validação com Zod
 - **Middlewares**: Log, segurança e tratamento de erros
 - **Frontend Responsivo**: HTML5, CSS3 e JavaScript vanilla
-- **Sistema de Comentários**: Comentários aninhados nas notícias
+- **Sistema de Comentários**: Comentários aninhados nas notícias (Não finalizado)
 - **Fórum**: Sistema de tópicos e posts para discussões
-- **Busca**: Funcionalidade de busca em notícias
-- **Filtros**: Filtros por categoria de games
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -23,9 +23,7 @@ Um site completo de notícias sobre games e esports desenvolvido com Node.js, Ex
 - **Prisma** - ORM para banco de dados
 - **SQLite** - Banco de dados
 - **Zod** - Validação de schemas
-- **EJS** - Template engine
 - **Morgan** - Logger HTTP
-- **Helmet** - Segurança
 - **CORS** - Cross-Origin Resource Sharing
 - **Express Rate Limit** - Rate limiting
 
@@ -42,14 +40,13 @@ Um site completo de notícias sobre games e esports desenvolvido com Node.js, Ex
 rush-news-site/
 ├── src/
 │   ├── config/
-│   │   └── database.js          # Configuração do Prisma
+│   │   └── database.js          # Configuração do Prisma (Conectar banco de dados)
 │   ├── controllers/
 │   │   ├── newsController.js    # Controller de notícias
 │   │   └── forumController.js   # Controller do fórum
 │   ├── middlewares/
 │   │   ├── errorHandler.js      # Tratamento de erros
 │   │   ├── logger.js            # Sistema de logs
-│   │   ├── security.js          # Middlewares de segurança
 │   │   └── validation.js        # Validação com Zod
 │   ├── routes/
 │   │   ├── newsRoutes.js        # Rotas de notícias
@@ -57,17 +54,30 @@ rush-news-site/
 │   └── server.js                # Servidor principal
 ├── public/
 │   ├── css/
-│   │   └── style.css            # Estilos principais
+│   │   ├── style.css            # Estilos principais
+│   │   ├── cards.css            # Cards de notícias
+│   │   ├── comments.css         # aba de comentários (não finalizada)
+│   │   ├── forum.css            # aba forum 
+│   │   ├── news.css             # aba all-news
+│   │   └── carousel.csss        # carrosel do index e carousel-admin
 │   ├── js/
-│   │   └── main.js              # JavaScript principal
-│   └── img/                     # Imagens e assets
-├── views/
-│   ├── index.ejs                # Página inicial
-│   ├── news.ejs                 # Página de notícia
-│   └── 404.ejs                  # Página de erro 404
+│   │   ├── app.js               # script principal (puxar e enviar dados do banco, carregar e gerar no front)
+│   │   ├── admin-carousel.js    # gerenciar página do carrosel (ordem, notícias que serão mostradas)
+│   │   ├── carousel.js          # faz o carrossel do index girar e outras funções que por hora bugaram
+│   │   ├── forum.js             # aba do forum (GET, POST, DELETE e render)
+│   │   └── news.js              # responsável pelo render dos cards e do all-news
+│   ├── img/  # Imagens
+│   ├── index.html               # Página inicial
+│   ├── admin-carousel.html      # Página para gerenciar o carrosel
+│   ├── all-news.html            # Página que mostra todos o cards de notícia
+│   ├── create-news.html         # Página para criar notícia
+│   ├── forum.html               # Pagina do fórum (adição e gerenciamento de tópicos (não finalizado))
+│   ├── news.html                # Página de notícia, é invocada ao clicar no card
+│   └── 404.html                 # Página de erro                   
 ├── prisma/
-│   ├── schema.prisma            # Schema do banco
-│   └── seed.js                  # Dados iniciais
+│   ├── schema.prisma            # Schema do banco (ajustado por IA na cara de pau)
+│   ├── dev.db                   # banco de dados 
+│   └── seed.js                  # Dados iniciais (para testar)
 ├── logs/                        # Arquivos de log
 ├── package.json                 # Dependências
 └── README.md                    # Este arquivo
@@ -81,18 +91,12 @@ rush-news-site/
 
 ### Passos
 
-1. **Clone o repositório**
-```bash
-git clone <url-do-repositorio>
-cd rush-news-site
-```
-
-2. **Instale as dependências**
+1. **Instale as dependências**
 ```bash
 npm install
 ```
 
-3. **Configure o banco de dados**
+2. **Configure o banco de dados**
 ```bash
 # Gerar cliente Prisma
 npm run db:generate
@@ -104,7 +108,7 @@ npm run db:migrate
 node prisma/seed.js
 ```
 
-4. **Inicie o servidor**
+3. **Inicie o servidor**
 ```bash
 # Desenvolvimento (com nodemon)
 npm run dev
@@ -113,9 +117,9 @@ npm run dev
 npm start
 ```
 
-5. **Acesse o site**
+4. **Acesse o site**
 ```
-http://localhost:3000
+http://localhost:3010
 ```
 
 ## 📊 API Endpoints
@@ -146,29 +150,11 @@ http://localhost:3000
 - `POST /api/news/carousel/reorder` - Reordenar notícias
 - `DELETE /api/news/carousel/clear` - Limpar carrossel
 
-## 🎮 Funcionalidades
-
-### Para Visitantes
-- ✅ Visualizar notícias por categoria
-- ✅ Ler artigos completos
-- ✅ Comentar em notícias
-- ✅ Buscar notícias
-- ✅ Participar do fórum
-- ✅ Visualizar tópicos e posts
-
-### Para Administradores (via API)
-- ✅ Criar, editar e deletar notícias
-- ✅ Moderar comentários
-- ✅ Gerenciar tópicos do fórum
-- ✅ Visualizar logs e estatísticas
-
 ## 🔒 Segurança
 
-- **Rate Limiting**: Proteção contra spam e ataques
+- **Rate Limiting**: Proteção contra spam e ataques (retirado junto com JWT, dava dando muita dor de cabeça)
 - **Sanitização**: Limpeza de dados de entrada
-- **Validação**: Validação rigorosa com Zod
-- **Helmet**: Headers de segurança
-- **CORS**: Configuração adequada de CORS
+- **Validação**: Validação com Zod
 - **Logs**: Sistema completo de auditoria
 
 ## 📱 Responsividade
@@ -183,8 +169,7 @@ O site é totalmente responsivo e funciona em:
 
 - **Tema Escuro**: Interface moderna com cores escuras
 - **Tipografia**: Bangers para títulos, Open Sans para texto
-- **Cores**: Paleta baseada em cinza escuro com acentos laranja
-- **Animações**: Transições suaves e efeitos hover
+- **Cores**: Paleta baseada em cinza escuro com acentos laranja (Cores duvidosas, mas eu não sei ver cor mesmo...)
 - **Cards**: Layout em grid responsivo para notícias
 
 ## 📝 Scripts Disponíveis
@@ -205,13 +190,12 @@ npm run db:studio  # Abrir Prisma Studio
 **News** (Notícias)
 - id, title, content, summary
 - imageUrl, author, category
-- published, featured, views
-- timestamps
+- views, timestamps
 
-**Comment** (Comentários)
+**Comment** (Comentários)               # Não finalizado, então não foi utilizado
 - id, content, author, email
 - newsId, parentId (para respostas)
-- timestamps
+- timestamps 
 
 **ForumTopic** (Tópicos do Fórum)
 - id, title, description, author
@@ -227,19 +211,4 @@ npm run db:studio  # Abrir Prisma Studio
 
 Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
 
-## 👥 Contribuição
-
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
-## 📞 Suporte
-
-Para suporte, entre em contato através do email ou abra uma issue no repositório.
-
----
-
-**RUSH** - O melhor site de notícias sobre games e esports! 🎮
 

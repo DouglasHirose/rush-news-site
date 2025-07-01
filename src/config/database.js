@@ -8,9 +8,9 @@ const prisma = new PrismaClient({
 async function connectDB() {
   try {
     await prisma.$connect();
-    console.log('✅ Conectado ao banco de dados');
+    console.log(' Conectado ao banco de dados');
   } catch (error) {
-    console.error('❌ Erro ao conectar ao banco:', error);
+    console.error(' Erro ao conectar ao banco:', error);
     process.exit(1);
   }
 }
@@ -21,7 +21,7 @@ async function disconnectDB() {
     await prisma.$disconnect();
     console.log('🔌 Desconectado do banco de dados');
   } catch (error) {
-    console.error('❌ Erro ao desconectar do banco:', error);
+    console.error(' Erro ao desconectar do banco:', error);
   }
 }
 

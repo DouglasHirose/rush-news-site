@@ -107,9 +107,9 @@ class HomePage {
       await this.loadFeaturedNews();
       await this.loadLatestNews();
       await this.loadForumDiscussions();
-      console.log('✅ HomePage: Tudo pronto!');
+      console.log('HomePage: Tudo pronto!');
     } catch (err) {
-      console.error('❌ HomePage: Erro ao inicializar:', err);
+      console.error('HomePage: Erro ao inicializar:', err);
     }
   }
 
@@ -125,7 +125,7 @@ async loadFeaturedNews() {
       this.showEmptyFeaturedNews();
     }
   } catch (error) {
-    console.error('❌ Erro ao carregar notícias em destaque:', error);
+    console.error('Erro ao carregar notícias em destaque:', error);
     this.showEmptyFeaturedNews();
   }
 }
@@ -143,7 +143,7 @@ async loadFeaturedNews() {
       const json = await res.json();
       if (json.success) this.renderLatestNews(json.data, page === 1);
     } catch (err) {
-      console.error('❌ Erro ao carregar últimas notícias:', err);
+      console.error('Erro ao carregar últimas notícias:', err);
     } finally {
       this.isLoading = false;
     }
@@ -155,7 +155,7 @@ async loadFeaturedNews() {
       const json = await res.json();
       if (json.success) this.renderForumDiscussions(json.data);
     } catch (err) {
-      console.error('❌ Erro ao carregar discussões do fórum:', err);
+      console.error('Erro ao carregar discussões do fórum:', err);
     }
   }
 
@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       window.homePage = new HomePage();
     } catch (error) {
-      console.error('💥 Erro ao inicializar HomePage:', error);
+      console.error('Erro ao inicializar HomePage:', error);
     }
   }
 

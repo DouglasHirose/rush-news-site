@@ -14,7 +14,7 @@ class NewsCarousel {
       await this.loadCarouselNews();
       this.setupKeyboardNavigation();
     } catch (err) {
-      console.error('💥 Erro ao inicializar carrossel:', err);
+      console.error('Erro ao inicializar carrossel:', err);
       this.showError();
     }
   }
@@ -34,7 +34,7 @@ class NewsCarousel {
         this.showEmptyState();
       }
     } catch (err) {
-      console.error('❌ Erro ao buscar dados do carrossel:', err);
+      console.error('Erro ao buscar dados do carrossel:', err);
       this.showError();
     } finally {
       this.isLoading = false;
