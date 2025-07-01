@@ -4,7 +4,7 @@ Criado por Douglas Kaoru Hirose - CG3023486
 
 Um site completo de notícias sobre games e esports desenvolvido com Node.js, Express, Prisma e tecnologias web modernas.
 
-## 🚀 Características
+##  Características
 
 - **Arquitetura MVC (Incompleta)**: Estrutura organizada com Models, Views
 - **API RESTful**: Endpoints para notícias e fórum
@@ -15,7 +15,7 @@ Um site completo de notícias sobre games e esports desenvolvido com Node.js, Ex
 - **Sistema de Comentários**: Comentários aninhados nas notícias (Não finalizado)
 - **Fórum**: Sistema de tópicos e posts para discussões
 
-## 🛠️ Tecnologias Utilizadas
+##  Tecnologias Utilizadas
 
 ### Backend
 - **Node.js** - Runtime JavaScript
@@ -34,7 +34,7 @@ Um site completo de notícias sobre games e esports desenvolvido com Node.js, Ex
 - **Google Fonts** - Tipografia (Bangers, Open Sans)
 - **Material Icons** - Ícones
 
-## 📁 Estrutura do Projeto
+##  Estrutura do Projeto
 
 ```
 rush-news-site/
@@ -83,7 +83,7 @@ rush-news-site/
 └── README.md                    # Este arquivo
 ```
 
-## 🚀 Instalação e Execução
+##  Instalação e Execução
 
 ### Pré-requisitos
 - Node.js 18+ 
@@ -122,7 +122,7 @@ npm start
 http://localhost:3010
 ```
 
-## 📊 API Endpoints
+##  API Endpoints
 
 ### Notícias
 - `GET /api/news` - Listar notícias (com paginação e filtros)
@@ -150,29 +150,29 @@ http://localhost:3010
 - `POST /api/news/carousel/reorder` - Reordenar notícias
 - `DELETE /api/news/carousel/clear` - Limpar carrossel
 
-## 🔒 Segurança
+##  Segurança
 
 - **Rate Limiting**: Proteção contra spam e ataques (retirado junto com JWT, dava dando muita dor de cabeça)
 - **Sanitização**: Limpeza de dados de entrada
 - **Validação**: Validação com Zod
 - **Logs**: Sistema completo de auditoria
 
-## 📱 Responsividade
+##  Responsividade
 
 O site é totalmente responsivo e funciona em:
-- 📱 Dispositivos móveis
-- 📱 Tablets
-- 💻 Desktops
-- 🖥️ Telas grandes
+-  Dispositivos móveis
+-  Tablets
+-  Desktops
+-  Telas grandes
 
-## 🎨 Design
+##  Design
 
 - **Tema Escuro**: Interface moderna com cores escuras
 - **Tipografia**: Bangers para títulos, Open Sans para texto
 - **Cores**: Paleta baseada em cinza escuro com acentos laranja (Cores duvidosas, mas eu não sei ver cor mesmo...)
 - **Cards**: Layout em grid responsivo para notícias
 
-## 📝 Scripts Disponíveis
+##  Scripts Disponíveis
 
 ```bash
 npm start          # Iniciar servidor em produção
@@ -183,7 +183,7 @@ npm run db:migrate # Executar migrações
 npm run db:studio  # Abrir Prisma Studio
 ```
 
-## 🗃️ Banco de Dados
+##  Banco de Dados
 
 ### Modelos
 
@@ -207,7 +207,7 @@ npm run db:studio  # Abrir Prisma Studio
 - timestamps
 
 
-## 📄 Licença
+##  Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
 

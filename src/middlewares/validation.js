@@ -28,13 +28,13 @@ const topicSchema = z.object({
   locked: z.boolean().default(false),
 });
 
-// 📝 Schema de Posts
+//  Schema de Posts
 const postSchema = z.object({
   content: z.string().min(5).max(5000),
   author: z.string().min(2).max(100),
 });
 
-// 🔢 Schema de Paginação
+//  Schema de Paginação
 const paginationSchema = z.object({
   page: z.string().regex(/^\d+$/).transform(Number).refine(n => n > 0, 'Página deve ser maior que 0').default('1'),
   limit: z.string().regex(/^\d+$/).transform(Number).refine(n => n > 0 && n <= 100).default('10'),
@@ -42,14 +42,14 @@ const paginationSchema = z.object({
   featured: z.string().regex(/^(true|false)$/).optional(),
 });
 
-// 🔍 Schema de Busca
+//  Schema de Busca
 const searchSchema = z.object({
   q: z.string().min(2).max(100),
   page: z.string().regex(/^\d+$/).transform(Number).default('1'),
   limit: z.string().regex(/^\d+$/).transform(Number).default('10'),
 });
 
-// 🔒 Criação de middleware genérico para validação de body
+//  Criação de middleware genérico para validação de body
 const createValidationMiddleware = schema => (req, res, next) => {
   try {
     req.body = schema.parse(req.body);
@@ -69,7 +69,7 @@ const createValidationMiddleware = schema => (req, res, next) => {
   }
 };
 
-// 🔍 Middleware para validar query params
+//  Middleware para validar query params
 const validateQueryParams = schema => (req, res, next) => {
   try {
     req.query = schema.parse(req.query);
