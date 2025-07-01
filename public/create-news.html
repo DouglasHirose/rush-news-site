@@ -76,6 +76,7 @@
         <a href="/" class="btn btn-secondary">Cancelar</a>
       </div>
     </form>
+    </div>
 </main>
 
 <footer>
@@ -141,7 +142,7 @@ async function handleCreateNews(e) {
     if (!result.success) throw new Error(result.message || 'Erro ao criar notícia');
 
     utils?.showMessage?.('Notícia criada com sucesso!', 'success');
-    setTimeout(() => window.location.href = '/', 1500);
+    setTimeout(() => window.location.href = '/', 3000);
 
   } catch (err) {
     console.error(err);
@@ -150,17 +151,5 @@ async function handleCreateNews(e) {
 }
 
 </script>
-  <style>
-
-    .admin-header {
-        text-align: center;
-        margin: 40px 0;
-        padding: 40px;
-        background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
-        border-radius: 15px;
-        color: white;
-    }
-
-  </style>
 </body>
 </html>

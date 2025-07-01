@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="RUSH News">
+    <meta name="keywords" content="jogos, games, esports, cs, csgo, lol, dota, rainbow six, notícias">
+    <meta name="description" content="O melhor site para você se manter informado sobre o mundo dos games!">
+    
+    <title>RUSH - Início</title>
+    
+    <!-- Links -->
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Bangers|Open+Sans:300,400,500,600,700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+</head>
+<body>
+<header>
+  <div class="container">
+    <div class="header-content">
+        <!-- Logo -->
+          <div class="logo">
+            <a href="/" id="titulo">RUSH</a>
+          </div>
+                
+                <!-- Menu Desktop -->
+                <nav class="menu-desktop">
+                    <ul>
+                        <li>
+                            <a href="/">Início</a>
+                        </li>
+                        <li>
+                            <a href="/news">Notícias</a>
+                        </li>
+                        <li>
+                            <a href="/forum">Fórum</a>
+                        </li>
+                        <li>
+                            <a href="/sobre">Sobre</a>
+                        </li>
+                        <li>
+                            <a href="https://wlo.link/@JapaG1_Info" target="_blank">Contato</a>
+                        </li>
+                    </ul>
+                </nav>
+                
+                <div class="clear"></div>
+            </div>
+        </div>
+    </header>
+
+<main>
+    <div class="container">
+        <div class="admin-header">
+            <h1>Notícias</h1>
+        </div>
+        <div class="news-grid" id="all-news">
+          <div class="loading">Carregando todas as notícias...</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+        <div class="container">
+            <div style="text-align: center; padding: 30px 0; color: #cccccc; border-top: 1px solid #555;">
+                <p>&copy;RUSH. Todos os direitos reservados.</p>
+                <p>Fórum de discussões sobre games</p>
+            </div>
+        </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+      const container = document.getElementById('all-news');
+
+      try {
+        const res = await fetch('/api/news');
+        const data = await res.json();
+
+        if (data.success && data.data.length > 0) {
+          container.innerHTML = data.data.map(news => `
+            <div class="news-card">
+              ${news.imageUrl ? `<img src="${news.imageUrl}" alt="${news.title}" class="news-thumbnail"/>` : ''}
+              <div class="news-info">
+                <h3><a href="/news/${news.id}">${news.title}</a></h3>
+                <p class="news-meta">
+                  ${news.author} • ${new Date(news.createdAt).toLocaleDateString('pt-BR')}
+                </p>
+                <p class="news-summary">${news.summary}</p>
+              </div>
+            </div>
+          `).join('');
+        } else {
+          container.innerHTML = '<p>Nenhuma notícia encontrada.</p>';
+        }
+      } catch (err) {
+        console.error('Erro ao carregar notícias:', err);
+        container.innerHTML = '<p>Erro ao carregar as notícias.</p>';
+      }
+    });
+  </script>
+</body>
+</html>

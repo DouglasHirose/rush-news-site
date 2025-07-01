@@ -24,6 +24,7 @@ model News {
   views       Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  sortOrder   Int      @default(0)
   
   // Relacionamento com comentários
   comments    Comment[]

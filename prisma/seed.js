@@ -2,7 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-async function main() {
+async function app() {
   console.log("🌱 Iniciando seed do banco de dados...");
 
   // Criar notícias de exemplo
@@ -163,7 +163,7 @@ async function main() {
   console.log(`📝 ${await prisma.forumPost.count()} posts do fórum criados`);
 }
 
-main()
+app()
   .catch((e) => {
     console.error("❌ Erro durante o seed:", e);
     process.exit(1);

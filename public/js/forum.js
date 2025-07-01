@@ -1,4 +1,3 @@
-// ===== FÓRUM - FUNCIONALIDADES =====
 class ForumPage {
     constructor() {
         this.currentPage = 1;
@@ -6,10 +5,26 @@ class ForumPage {
         this.currentSort = 'recent';
         this.topics = [];
         this.isLoading = false;
-        
+        this.dom = this.cacheDOMElements();
+        this.editingTopicId = null;
         this.init();
     }
-    
+
+    cacheDOMElements() {
+        return {
+            container: document.getElementById('topics-list'),
+            pagination: document.getElementById('pagination'),
+            modal: document.getElementById('create-topic-modal'),
+            form: document.getElementById('create-topic-form'),
+            searchInput: document.getElementById('search-topics'),
+            categoryFilter: document.getElementById('category-filter'),
+            sortFilter: document.getElementById('sort-filter'),
+            createBtn: document.getElementById('create-topic-btn'),
+            closeBtn: document.getElementById('close-modal'),
+            cancelBtn: document.getElementById('cancel-topic'),
+        };
+    }
+
     async init() {
         try {
             await this.loadTopics();
@@ -18,25 +33,17 @@ class ForumPage {
             console.error('Erro ao inicializar fórum:', error);
         }
     }
-    
+
     async loadTopics(page = 1, category = '', sort = 'recent') {
         if (this.isLoading) return;
         this.isLoading = true;
-        
+
         try {
-            const params = new URLSearchParams({
-                page: page,
-                limit: 10,
-                sort: sort
-            });
-            
-            if (category) {
-                params.append('category', category);
-            }
-            
+            const params = new URLSearchParams({ page, limit: 10, sort });
+            if (category) params.append('category', category);
             const response = await fetch(`/api/forum?${params}`);
             const data = await response.json();
-            
+
             if (data.success) {
                 this.topics = data.data;
                 this.renderTopics();
@@ -51,12 +58,12 @@ class ForumPage {
             this.isLoading = false;
         }
     }
-    
+
     renderTopics() {
-        const container = document.getElementById('topics-list');
+        const { container } = this.dom;
         if (!container) return;
-        
-        if (this.topics.length === 0) {
+
+        if (!this.topics.length) {
             container.innerHTML = `
                 <div class="empty-state">
                     <span class="material-icons">forum</span>
@@ -70,303 +77,267 @@ class ForumPage {
             `;
             return;
         }
-        
+
         container.innerHTML = this.topics.map(topic => `
             <div class="topic-item">
                 <div class="topic-content">
                     <div class="topic-header">
-                        <h3 class="topic-title">
-                            <a href="/forum/${topic.id}">${topic.title}</a>
-                        </h3>
+                        <h3><a href="/forum/${topic.id}">${topic.title}</a></h3>
                         <span class="topic-category">${topic.category}</span>
                     </div>
-                    <p class="topic-description">${topic.description}</p>
+                    <p>${topic.description}</p>
                     <div class="topic-meta">
-                        <div class="topic-author">
-                            <span class="material-icons">person</span>
-                            <span>Por ${topic.author}</span>
-                        </div>
-                        <div class="topic-date">
-                            <span class="material-icons">schedule</span>
-                            <span>${utils.formatDate(topic.createdAt)}</span>
-                        </div>
-                        <div class="topic-replies">
-                            <span class="material-icons">comment</span>
-                            <span>${topic._count?.posts || 0} respostas</span>
-                        </div>
-                        <div class="topic-views">
-                            <span class="material-icons">visibility</span>
-                            <span>${topic.views || 0} visualizações</span>
-                        </div>
-                        <div class="topic-actions">
-                            <button class="btn-edit-topic" onclick="forumPage.editTopic(${topic.id})" title="Editar tópico">
-                                <span class="material-icons">edit</span>
+                        <span><i class="material-icons">person</i> ${topic.author}</span>
+                        <span><i class="material-icons">schedule</i> ${utils.formatDate(topic.createdAt)}</span>
+                        <span><i class="material-icons">comment</i> ${topic._count?.posts || 0} respostas</span>
+                        <span><i class="material-icons">visibility</i> ${topic.views || 0} visualizações</span>
+                        <div>
+                            <button class="btn-edit-topic" data-id="${topic.id}" title="Editar">
+                                <i class="material-icons">edit</i>
                             </button>
-                            <button class="btn-delete-topic" onclick="forumPage.deleteTopic(${topic.id})" title="Excluir tópico">
-                                <span class="material-icons">delete</span>
+                            <button class="btn-delete-topic" data-id="${topic.id}" title="Excluir">
+                                <i class="material-icons">delete</i>
                             </button>
                         </div>
                     </div>
                 </div>
-                <div class="topic-actions">
-                    <a href="/forum/${topic.id}" class="btn btn-small btn-primary">
-                        <span class="material-icons">open_in_new</span>
-                        Ver Tópico
-                    </a>
-                </div>
+                <a href="/forum/${topic.id}" class="btn btn-small btn-primary">
+                    <i class="material-icons">open_in_new</i> Ver Tópico
+                </a>
             </div>
         `).join('');
     }
-    
-    renderPagination(pagination) {
-        const container = document.getElementById('pagination');
-        if (!container || !pagination) return;
-        
-        const { currentPage, totalPages, hasNext, hasPrev } = pagination;
-        
-        if (totalPages <= 1) {
-            container.innerHTML = '';
-            return;
-        }
-        
-        let paginationHTML = '<div class="pagination-controls">';
-        
-        // Botão anterior
-        if (hasPrev) {
-            paginationHTML += `
-                <button class="pagination-number" data-page="${i}">${i}</button>
-                    <span class="material-icons">chevron_left</span>
-                    Anterior
-                </button>
-            `;
-        }
-        
-        // Números das páginas
-        paginationHTML += '<div class="pagination-numbers">';
-        for (let i = 1; i <= totalPages; i++) {
-            if (i === currentPage) {
-                paginationHTML += `<span class="pagination-number active">${i}</span>`;
-            } else {
-                paginationHTML += `<button class="pagination-number" onclick="forumPage.goToPage(${i})">${i}</button>`;
-            }
-        }
-        paginationHTML += '</div>';
-        
-        // Botão próximo
-        if (hasNext) {
-            paginationHTML += `
-                <button class="pagination-btn" onclick="forumPage.goToPage(${currentPage + 1})">
-                    Próximo
-                    <span class="material-icons">chevron_right</span>
-                </button>
-            `;
-        }
-        
-        paginationHTML += '</div>';
-        container.innerHTML = paginationHTML;
-    }
-    
-    setupEventListeners() {
-    document.getElementById('pagination')?.addEventListener('click', (e) => {
-        const pageBtn = e.target.closest('[data-page]');
-        if (pageBtn) {
-            const page = parseInt(pageBtn.dataset.page);
-            this.goToPage(page);
-        }
-    });
-        // Botão criar tópico
-        const createBtn = document.getElementById('create-topic-btn');
-        if (createBtn) {
-            createBtn.addEventListener('click', () => this.openCreateModal());
-        }
-        
-        // Modal
-        const modal = document.getElementById('create-topic-modal');
-        const closeBtn = document.getElementById('close-modal');
-        const cancelBtn = document.getElementById('cancel-topic');
-        
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => this.closeCreateModal());
-        }
-        
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', () => this.closeCreateModal());
-        }
-        
-        if (modal) {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    this.closeCreateModal();
-                }
-            });
-        }
-        
-        // Formulário
-        const form = document.getElementById('create-topic-form');
-        if (form) {
-            form.addEventListener('submit', (e) => this.handleCreateTopic(e));
-        }
-        
-        // Filtros
-        const searchInput = document.getElementById('search-topics');
-        const categoryFilter = document.getElementById('category-filter');
-        const sortFilter = document.getElementById('sort-filter');
-        
-        if (searchInput) {
-            searchInput.addEventListener('input', utils.debounce(() => this.handleSearch(), 500));
-        }
-        
-        if (categoryFilter) {
-            categoryFilter.addEventListener('change', () => this.handleCategoryFilter());
-        }
-        
-        if (sortFilter) {
-            sortFilter.addEventListener('change', () => this.handleSortFilter());
-        }
-    }
-    
-    openCreateModal() {
-        const modal = document.getElementById('create-topic-modal');
-        if (modal) {
-            modal.style.display = 'flex';
-            // Removido o overflow hidden para permitir scroll
-        }
-    }
-    
-    closeCreateModal() {
-        const modal = document.getElementById('create-topic-modal');
-        if (modal) {
-            modal.style.display = 'none';
-            // Removido o overflow auto pois não foi definido overflow hidden
-            
-            // Limpar formulário
-            const form = document.getElementById('create-topic-form');
-            if (form) {
-                form.reset();
-            }
-        }
-    }
-    
-    async handleCreateTopic(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(e.target);
-        const topicData = {
-            title: formData.get('title'),
-            category: formData.get('category'),
-            description: formData.get('description'),
-            content: formData.get('content'),
-            author: formData.get('author')
-        };
-        
+
+        async deleteTopic(topicId) {
+        if (!confirm('Tem certeza que deseja excluir este tópico?')) return;
+
         try {
-            const response = await fetch('/api/forum', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(topicData)
-            });
-            
-            const data = await response.json();
-            
-            if (data.success) {
-                utils.showMessage('Tópico criado com sucesso!', 'success');
-                this.closeCreateModal();
-                await this.loadTopics(); // Recarregar tópicos
-            } else {
-                throw new Error(data.message || 'Erro ao criar tópico');
-            }
-        } catch (error) {
-            console.error('Erro ao criar tópico:', error);
-            utils.showMessage('Erro ao criar tópico', 'error');
-        }
-    }
-    
-    handleSearch() {
-        const searchInput = document.getElementById('search-topics');
-        if (searchInput) {
-            // Implementar busca quando a API estiver pronta
-            console.log('Buscar por:', searchInput.value);
-        }
-    }
-    
-    handleCategoryFilter() {
-        const categoryFilter = document.getElementById('category-filter');
-        if (categoryFilter) {
-            this.currentCategory = categoryFilter.value;
-            this.currentPage = 1;
-            this.loadTopics(1, this.currentCategory, this.currentSort);
-        }
-    }
-    
-    handleSortFilter() {
-        const sortFilter = document.getElementById('sort-filter');
-        if (sortFilter) {
-            this.currentSort = sortFilter.value;
-            this.currentPage = 1;
-            this.loadTopics(1, this.currentCategory, this.currentSort);
-        }
-    }
-    
-    goToPage(page) {
-        this.currentPage = page;
-        this.loadTopics(page, this.currentCategory, this.currentSort);
-    }
-    
-    async editTopic(topicId) {
-        // Implementar edição de tópico
-        utils.showMessage('Funcionalidade de edição em desenvolvimento', 'info');
-    }
-    
-    async deleteTopic(topicId) {
-        if (!confirm('Tem certeza que deseja excluir este tópico? Esta ação não pode ser desfeita.')) {
-            return;
-        }
-        
-        try {
-            const response = await fetch(`/api/forum/${topicId}`, {
+            const res = await fetch(`/api/forum/${topicId}`, {
                 method: 'DELETE'
             });
-            
-            const data = await response.json();
-            
+            const data = await res.json();
+
             if (data.success) {
                 utils.showMessage('Tópico excluído com sucesso!', 'success');
-                await this.loadTopics(); // Recarregar tópicos
+                await this.loadTopics(this.currentPage, this.currentCategory, this.currentSort);
             } else {
-                throw new Error(data.message || 'Erro ao excluir tópico');
+                throw new Error(data.message || 'Erro desconhecido');
             }
         } catch (error) {
             console.error('Erro ao excluir tópico:', error);
             utils.showMessage('Erro ao excluir tópico', 'error');
         }
     }
-    
-    showError(message) {
-        const container = document.getElementById('topics-list');
-        if (container) {
-            container.innerHTML = `
-                <div class="error-state">
-                    <span class="material-icons">error_outline</span>
-                    <h3>Erro ao Carregar Fórum</h3>
-                    <p>${message}</p>
-                    <button class="btn btn-primary" onclick="forumPage.loadTopics()">
-                        <span class="material-icons">refresh</span>
-                        Tentar Novamente
-                    </button>
-                </div>
-            `;
+
+    renderPagination({ currentPage, totalPages, hasNext, hasPrev }) {
+        const { pagination } = this.dom;
+        if (!pagination || totalPages <= 1) {
+            pagination.innerHTML = '';
+            return;
         }
+
+        let html = `<div class="pagination-controls">`;
+
+        if (hasPrev) {
+            html += `<button onclick="forumPage.goToPage(${currentPage - 1})">
+                        <i class="material-icons">chevron_left</i> Anterior
+                     </button>`;
+        }
+
+        html += '<div class="pagination-numbers">';
+        for (let i = 1; i <= totalPages; i++) {
+            html += (i === currentPage)
+                ? `<span class="pagination-number active">${i}</span>`
+                : `<button onclick="forumPage.goToPage(${i})">${i}</button>`;
+        }
+        html += '</div>';
+
+        if (hasNext) {
+            html += `<button onclick="forumPage.goToPage(${currentPage + 1})">
+                        Próximo <i class="material-icons">chevron_right</i>
+                     </button>`;
+        }
+
+        html += '</div>';
+        pagination.innerHTML = html;
+    }
+
+    setupEventListeners() {
+        const { createBtn, closeBtn, cancelBtn, modal, form, searchInput, categoryFilter, sortFilter } = this.dom;
+
+        createBtn?.addEventListener('click', () => this.openCreateModal());
+        closeBtn?.addEventListener('click', () => this.closeCreateModal());
+        cancelBtn?.addEventListener('click', () => this.closeCreateModal());
+        modal?.addEventListener('click', e => { if (e.target === modal) this.closeCreateModal(); });
+        form?.addEventListener('submit', e => this.handleFormSubmit(e));
+        searchInput?.addEventListener('input', debounce(() => this.handleSearch(), 500));
+        categoryFilter?.addEventListener('change', () => this.handleCategoryFilter());
+        sortFilter?.addEventListener('change', () => this.handleSortFilter());
+
+        this.dom.container.addEventListener('click', (e) => {
+            const target = e.target.closest('button');
+
+            if (!target) return;
+
+            const topicId = target.getAttribute('data-id');
+
+            if (target.classList.contains('btn-edit-topic')) {
+                this.editTopic(topicId);
+            }
+
+            if (target.classList.contains('btn-delete-topic')) {
+                this.deleteTopic(topicId);
+        }
+});
+
+    }
+
+openCreateModal(topic = null) {
+    const { modal, form } = this.dom;
+
+    if (topic) {
+        // Modo Edição
+        this.editingTopicId = topic.id;
+        form.title.value = topic.title;
+        form.category.value = topic.category;
+        form.description.value = topic.description;
+        form.content.value = topic.content;
+        form.author.value = topic.author;
+
+        form.querySelector('button[type="submit"]').innerHTML = `
+            <span class="material-icons">save</span>
+            Salvar Alterações
+        `;
+    } else {
+        // Modo Criação
+        this.editingTopicId = null;
+        form.reset();
+        form.querySelector('button[type="submit"]').innerHTML = `
+            <span class="material-icons">send</span>
+            Criar Tópico
+        `;
+    }
+
+    modal.style.display = 'flex';
+}
+
+
+    closeCreateModal() {
+        const { modal, form } = this.dom;
+        modal.style.display = 'none';
+        form?.reset();
+    }
+
+async handleFormSubmit(e) {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const topicData = Object.fromEntries(formData.entries());
+    const url = this.editingTopicId ? `/api/forum/${this.editingTopicId}` : '/api/forum';
+    const method = this.editingTopicId ? 'PUT' : 'POST';
+
+    try {
+        const res = await fetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(topicData)
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            utils.showMessage(`Tópico ${this.editingTopicId ? 'atualizado' : 'criado'} com sucesso!`, 'success');
+            this.closeCreateModal();
+            await this.loadTopics();
+        } else {
+            throw new Error(data.message);
+        }
+    } catch (error) {
+        console.error('Erro no envio do formulário:', error);
+        utils.showMessage(`Erro ao ${this.editingTopicId ? 'editar' : 'criar'} tópico`, 'error');
     }
 }
 
-// Inicializar página do fórum
-let forumPage;
+    handleSearch() {
+        const value = this.dom.searchInput?.value;
+        if (value) console.log('Buscar por:', value);
+    }
 
-document.addEventListener('DOMContentLoaded', function() {
+    handleCategoryFilter() {
+        this.currentCategory = this.dom.categoryFilter?.value || '';
+        this.currentPage = 1;
+        this.loadTopics(1, this.currentCategory, this.currentSort);
+    }
+
+    handleSortFilter() {
+        this.currentSort = this.dom.sortFilter?.value || 'recent';
+        this.currentPage = 1;
+        this.loadTopics(1, this.currentCategory, this.currentSort);
+    }
+
+    goToPage(page) {
+        this.currentPage = page;
+        this.loadTopics(page, this.currentCategory, this.currentSort);
+    }
+
+async editTopic(topicId) {
+    try {
+        const res = await fetch(`/api/forum/${topicId}`);
+        const data = await res.json();
+
+        if (data.success) {
+            this.openCreateModal(data.data);
+        } else {
+            utils.showMessage('Tópico não encontrado', 'error');
+        }
+    } catch (error) {
+        console.error('Erro ao carregar tópico para edição:', error);
+        utils.showMessage('Erro ao carregar tópico', 'error');
+    }
+}
+
+
+    async deleteTopic(topicId) {
+        if (!confirm('Tem certeza que deseja excluir este tópico?')) return;
+
+        try {
+            const res = await fetch(`/api/forum/${topicId}`, { method: 'DELETE' });
+            const data = await res.json();
+
+            if (data.success) {
+                utils.showMessage('Tópico excluído com sucesso!', 'success');
+                await this.loadTopics();
+            } else throw new Error(data.message);
+        } catch (error) {
+            console.error('Erro ao excluir tópico:', error);
+            utils.showMessage('Erro ao excluir tópico', 'error');
+        }
+    }
+
+    showError(message) {
+        this.dom.container.innerHTML = `
+            <div class="error-state">
+                <span class="material-icons">error_outline</span>
+                <h3>Erro ao Carregar Fórum</h3>
+                <p>${message}</p>
+                <button class="btn btn-primary" onclick="forumPage.loadTopics()">
+                    <i class="material-icons">refresh</i> Tentar Novamente
+                </button>
+            </div>
+        `;
+    }
+}
+
+function debounce(func, wait = 300) {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
+
+document.addEventListener('DOMContentLoaded', () => {
     if (window.location.pathname === '/forum' || window.location.pathname === '/forum.html') {
         forumPage = new ForumPage();
     }
 });
-

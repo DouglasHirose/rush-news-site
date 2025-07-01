@@ -1,186 +1,115 @@
-// Schema para validação de notícias
-const z = require('zod');
+const { z, ZodError } = require('zod');
 
+// 📰 Schema de Notícias
 const newsSchema = z.object({
-  title: z.string().min(1),
-  summary: z.string().min(1),
-  content: z.string().min(1),
+  title: z.string().min(1, 'Título é obrigatório'),
+  summary: z.string().min(1, 'Resumo é obrigatório'),
+  content: z.string().min(1, 'Conteúdo é obrigatório'),
   category: z.string().optional(),
-  imageUrl: z.string().optional(),
-  createdAt: z.string().optional()
+  imageUrl: z.string().url('URL inválida').optional(),
+  createdAt: z.string().optional(),
 });
 
-function validateNews(req, res, next) {
+// 💬 Schema de Comentários
+const commentSchema = z.object({
+  content: z.string().min(5).max(1000),
+  author: z.string().min(2).max(100),
+  email: z.string().email('Email inválido').optional(),
+  parentId: z.number().int().positive().optional(),
+});
+
+// 📌 Schema de Tópicos
+const topicSchema = z.object({
+  title: z.string().min(5).max(200),
+  description: z.string().max(1000).optional(),
+  author: z.string().min(2).max(100),
+  category: z.string().min(2).max(50).default('Geral'),
+  pinned: z.boolean().default(false),
+  locked: z.boolean().default(false),
+});
+
+// 📝 Schema de Posts
+const postSchema = z.object({
+  content: z.string().min(5).max(5000),
+  author: z.string().min(2).max(100),
+});
+
+// 🔢 Schema de Paginação
+const paginationSchema = z.object({
+  page: z.string().regex(/^\d+$/).transform(Number).refine(n => n > 0, 'Página deve ser maior que 0').default('1'),
+  limit: z.string().regex(/^\d+$/).transform(Number).refine(n => n > 0 && n <= 100).default('10'),
+  category: z.string().optional(),
+  featured: z.string().regex(/^(true|false)$/).optional(),
+});
+
+// 🔍 Schema de Busca
+const searchSchema = z.object({
+  q: z.string().min(2).max(100),
+  page: z.string().regex(/^\d+$/).transform(Number).default('1'),
+  limit: z.string().regex(/^\d+$/).transform(Number).default('10'),
+});
+
+// 🔒 Criação de middleware genérico para validação de body
+const createValidationMiddleware = schema => (req, res, next) => {
   try {
-    req.body = newsSchema.parse(req.body);
+    req.body = schema.parse(req.body);
     next();
   } catch (err) {
-    return res.status(400).json({
-      success: false,
-      message: 'Dados de entrada inválidos',
-      issues: err.errors
-    });
+    if (err instanceof ZodError) {
+      return res.status(400).json({
+        success: false,
+        message: 'Dados inválidos',
+        errors: err.errors.map(e => ({
+          field: e.path.join('.'),
+          message: e.message,
+        })),
+      });
+    }
+    next(err);
   }
-}
-
-module.exports = { validateNews };
-
-
-
-// Schema para validação de comentários
-const commentSchema = z.object({
-  content: z.string()
-    .min(5, 'Comentário deve ter pelo menos 5 caracteres')
-    .max(1000, 'Comentário deve ter no máximo 1000 caracteres'),
-  author: z.string()
-    .min(2, 'Nome deve ter pelo menos 2 caracteres')
-    .max(100, 'Nome deve ter no máximo 100 caracteres'),
-  email: z.string()
-    .email('Email inválido')
-    .optional(),
-  parentId: z.number()
-    .int('ID do comentário pai deve ser um número inteiro')
-    .positive('ID do comentário pai deve ser positivo')
-    .optional()
-});
-
-// Schema para validação de tópicos do fórum
-const topicSchema = z.object({
-  title: z.string()
-    .min(5, 'Título deve ter pelo menos 5 caracteres')
-    .max(200, 'Título deve ter no máximo 200 caracteres'),
-  description: z.string()
-    .max(1000, 'Descrição deve ter no máximo 1000 caracteres')
-    .optional(),
-  author: z.string()
-    .min(2, 'Nome do autor deve ter pelo menos 2 caracteres')
-    .max(100, 'Nome do autor deve ter no máximo 100 caracteres'),
-  category: z.string()
-    .min(2, 'Categoria deve ter pelo menos 2 caracteres')
-    .max(50, 'Categoria deve ter no máximo 50 caracteres')
-    .default('Geral'),
-  pinned: z.boolean().default(false),
-  locked: z.boolean().default(false)
-});
-
-// Schema para validação de posts do fórum
-const postSchema = z.object({
-  content: z.string()
-    .min(5, 'Post deve ter pelo menos 5 caracteres')
-    .max(5000, 'Post deve ter no máximo 5000 caracteres'),
-  author: z.string()
-    .min(2, 'Nome deve ter pelo menos 2 caracteres')
-    .max(100, 'Nome deve ter no máximo 100 caracteres')
-});
-
-// Função para criar middleware de validação
-const createValidationMiddleware = (schema) => {
-  return (req, res, next) => {
-    try {
-      const validatedData = schema.parse(req.body);
-      req.body = validatedData;
-      next();
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const errors = error.errors.map(err => ({
-          field: err.path.join('.'),
-          message: err.message,
-          received: err.received
-        }));
-        
-        return res.status(400).json({
-          success: false,
-          message: 'Dados de entrada inválidos',
-          errors
-        });
-      }
-      next(error);
-    }
-  };
 };
 
-// Middleware para validação de parâmetros de query
-const validateQueryParams = (schema) => {
-  return (req, res, next) => {
-    try {
-      const validatedQuery = schema.parse(req.query);
-      req.query = validatedQuery;
-      next();
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const errors = error.errors.map(err => ({
-          field: err.path.join('.'),
-          message: err.message
-        }));
-        
-        return res.status(400).json({
-          success: false,
-          message: 'Parâmetros de consulta inválidos',
-          errors
-        });
-      }
-      next(error);
+// 🔍 Middleware para validar query params
+const validateQueryParams = schema => (req, res, next) => {
+  try {
+    req.query = schema.parse(req.query);
+    next();
+  } catch (err) {
+    if (err instanceof ZodError) {
+      return res.status(400).json({
+        success: false,
+        message: 'Parâmetros inválidos',
+        errors: err.errors.map(e => ({
+          field: e.path.join('.'),
+          message: e.message,
+        })),
+      });
     }
-  };
+    next(err);
+  }
 };
 
-// Schema para paginação
-const paginationSchema = z.object({
-  page: z.string()
-    .regex(/^\d+$/, 'Página deve ser um número')
-    .transform(val => parseInt(val))
-    .refine(val => val > 0, 'Página deve ser maior que 0')
-    .default('1'),
-  limit: z.string()
-    .regex(/^\d+$/, 'Limite deve ser um número')
-    .transform(val => parseInt(val))
-    .refine(val => val > 0 && val <= 100, 'Limite deve estar entre 1 e 100')
-    .default('10'),
-  category: z.string().optional(),
-  featured: z.string()
-    .regex(/^(true|false)$/, 'Featured deve ser true ou false')
-    .optional()
-});
-
-// Schema para busca
-const searchSchema = z.object({
-  q: z.string()
-    .min(2, 'Termo de busca deve ter pelo menos 2 caracteres')
-    .max(100, 'Termo de busca deve ter no máximo 100 caracteres'),
-  page: z.string()
-    .regex(/^\d+$/, 'Página deve ser um número')
-    .transform(val => parseInt(val))
-    .default('1'),
-  limit: z.string()
-    .regex(/^\d+$/, 'Limite deve ser um número')
-    .transform(val => parseInt(val))
-    .default('10')
-});
-
-// Middlewares específicos
-const validateNews = createValidationMiddleware(newsSchema);
-const validateComment = createValidationMiddleware(commentSchema);
-const validateTopic = createValidationMiddleware(topicSchema);
-const validatePost = createValidationMiddleware(postSchema);
-const validatePagination = validateQueryParams(paginationSchema);
-const validateSearch = validateQueryParams(searchSchema);
-
+// 🧩 Exportações
 module.exports = {
-  validateNews,
-  validateComment,
-  validateTopic,
-  validatePost,
-  validatePagination,
-  validateSearch,
+  // Middlewares de validação
+  validateNews: createValidationMiddleware(newsSchema),
+  validateComment: createValidationMiddleware(commentSchema),
+  validateTopic: createValidationMiddleware(topicSchema),
+  validatePost: createValidationMiddleware(postSchema),
+  validatePagination: validateQueryParams(paginationSchema),
+  validateSearch: validateQueryParams(searchSchema),
+
+  // Funções auxiliares
   createValidationMiddleware,
   validateQueryParams,
+
+  // Schemas crus (úteis em testes ou uso direto)
   schemas: {
     newsSchema,
     commentSchema,
     topicSchema,
     postSchema,
     paginationSchema,
-    searchSchema
-  }
+    searchSchema,
+  },
 };
-

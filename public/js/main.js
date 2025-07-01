@@ -64,6 +64,7 @@ class HomePage {
             
             if (data.success && data.data && data.data.length > 0) {
                 this.renderFeaturedNews(data.data);
+                renderCarousel(data.data);
             } else {
                 this.showEmptyFeaturedNews();
             }
