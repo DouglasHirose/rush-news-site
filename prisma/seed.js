@@ -26,7 +26,6 @@ async function app() {
       imageUrl: "/img/starladder/IMG_20190807_113117.jpg",
       author: "Douglas K. Hirose",
       category: "CS:GO",
-      published: true,
       featured: true,
       views: 1250
     }
@@ -53,7 +52,6 @@ async function app() {
       imageUrl: "/img/lol-worlds-2024.jpg",
       author: "Admin",
       category: "League of Legends",
-      published: true,
       featured: false,
       views: 890
     }
@@ -80,7 +78,6 @@ async function app() {
       imageUrl: "/img/ti2024.jpg",
       author: "Admin",
       category: "Dota 2",
-      published: true,
       featured: false,
       views: 654
     }
